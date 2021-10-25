@@ -20,11 +20,11 @@ export default function dashboard(props) {
   const [activityList, setActivityList] = useState([]);
   const [utilDashboard, setUtilDashboard] = useUtil("");
 
-  // useEffect(() => {
-  //   if (!navLoginButtonContext.isLoggedIn) {
-  //     Router.push("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!navLoginButtonContext.isLoggedIn) {
+      Router.push("/login");
+    }
+  }, []);
 
   return (
     <>
