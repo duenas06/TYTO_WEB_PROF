@@ -1,8 +1,7 @@
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Flex } from "@chakra-ui/layout";
-import {IconButton, Image} from "@chakra-ui/react"
-import {SettingsIcon } from "@chakra-ui/icons"
+import {Image, Box, Text } from "@chakra-ui/react"
 import {
   Drawer,
   DrawerContent,
@@ -20,6 +19,7 @@ import Colors from "../../Constants/Colors";
 import NavLoginButtonContext from "../../Context/NavLogInButtonContext";
 import Router from "next/router";
 import LogOutDialog from "../dashboard/LogOutDialog";
+import { useUtil } from "../../Context/UserDataContext";
 export default function MenuButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -49,10 +49,27 @@ export default function MenuButton() {
           <DrawerCloseButton color={Colors.white} />
           <DrawerHeader color={Colors.white} fontSize="50">MENU</DrawerHeader>
           <DrawerBody >
-            <Flex flexDirection="column" justifyContent="stretch" {...styleProps.drawerButtons}>
-            <Flex flexDirection="row" justifyContent="stretch" >
+            <Flex flexDirection="column" justifyContent="stretch" >
+            <Flex flexDirection="row" justifyContent="flex-start"{...styleProps.drawerButtons} >
+
+
+            {/* HOME */}
+            <Box {...styleProps.buttonBoxes}>
             <Button
               {...styleProps.buttons}
+              onClick={() => {
+                onClose();
+                Router.push("/dashboard");
+              }}
+              >
+                <Image boxSize ="150" src="/home.svg"/>
+              </Button>
+              <Text textAlign ="center" fontSize="2xl">HOME</Text>
+              </Box>
+
+            {/* CLASS SCHEDULE */}
+            <Box {...styleProps.buttonBoxes}>
+            <Button
               {...styleProps.buttons}
               onClick={() => {
                 onClose();
@@ -61,42 +78,63 @@ export default function MenuButton() {
               >
                 <Image boxSize ="150" src="/calendar.svg"/>
               </Button>
-
+              <Text textAlign ="center" fontSize="2xl">CLASS SCHEDULE</Text>
+              </Box>
+              
+              
+              {/* QUIZZES */}
+              <Box {...styleProps.buttonBoxes}>
               <Button
-               {...styleProps.buttons}
-                
-              >
+               {...styleProps.buttons}>
                <Image boxSize ="150" src="/quiz.svg"/>
               </Button>
+              <Text textAlign ="center" fontSize="2xl">QUIZZES</Text>
+              </Box>
 
-              <Button {...styleProps.buttons} >
-              <Image boxSize ="150" src="/addquiz.svg"/>
-              </Button>
+              {/* CREATE QUIZ */}
+              <Box {...styleProps.buttonBoxes}>
+                <Button {...styleProps.buttons}>
+                  <Image boxSize ="150" src="/addquiz.svg"/>
+                </Button>
+                <Text textAlign ="center" fontSize="2xl">CREATE QUIZ</Text>
+              </Box>
 
-              <Button
-                {...styleProps.buttons}
-                > <Image boxSize ="150" src="/account.svg"/> </Button>
+           
+              
+              {/* SECOND ROW */}
               </Flex>
+              <Flex flexDirection="row" justifyContent="flex-start"  {...styleProps.drawerButtons}>
 
-              <Flex flexDirection="row" justifyContent="stretch" mt = "5vh">
-            
-              <Button
-              {...styleProps.buttons}
-                >
-                <Image boxSize ="150" src="/settings.svg"/>
-              </Button>
+                   {/* ACCOUNT */}
+              <Box {...styleProps.buttonBoxes}>
+                <Button {...styleProps.buttons}>
+                  <Image boxSize ="150" src="/account.svg"/>
+                </Button>
+                <Text textAlign ="center" fontSize="2xl">ACCOUNT</Text>
+              </Box>
 
-              <Button
-              {...styleProps.buttons}
-                onClick={() => {
-                  onClose();
-                  navLoginButtonContext.isLoggedIn
+                {/* SETTINGS */}
+                <Box {...styleProps.buttonBoxes}>
+                  <Button {...styleProps.buttons}>
+                    <Image boxSize ="150" src="/settings.svg"/>
+                  </Button>
+                  <Text textAlign ="center" fontSize="2xl">SETTINGS</Text>
+                </Box>
+
+                {/* LOGOUT */}
+                <Box {...styleProps.buttonBoxes}>
+                  <Button
+                    {...styleProps.buttons}
+                    onClick={() => {
+                    onClose();
+                    navLoginButtonContext.isLoggedIn
                     ? setIsLogoutDialogOpen(true)
-                    : Router.push("/login");
-                }}
-              >         <Image boxSize ="150" src="/logout.svg"/>
-                {/* {navLoginButtonContext.isLoggedIn ? "LOG OUT" : "LOG IN"} */}
-              </Button>
+                    : Router.push("/login");}}>
+                       <Image boxSize ="150" src="/logout.svg"/>
+                  </Button>
+                  <Text textAlign ="center" fontSize="2xl">LOGOUT</Text>
+                </Box>
+              
               </Flex>  
             </Flex>
           </DrawerBody>
@@ -110,25 +148,35 @@ export default function MenuButton() {
 
 const styleProps = {
   drawerButtons: {
-    variant: "ghost",
+    variant: "solid",
     color: Colors.green,
     colorScheme: "blackAlpha",
-    justifyContent: "flex-start",
-    marginBottom: "5",
+    alignItems: "left",
+    marginBottom: "8vh",
   },
   drawerBody: {
       borderRadius: "lg",
-      paddingStart: "5vh",
+      paddingStart: "1vh",
+      alignItems: "left",
       bg: Colors.black,
+  },
+  buttonBoxes: {
+    backgroundColor: Colors.black,
+    color: Colors.white,
+    colorScheme: "cyan",
+    variant:"solid",
+    w: "20vh",
+    h: "25vh",
+    ml: "20vh"
   },
   buttons: {
     variant:"solid",
-    shadow:"5g",
+    shadow:"xl",
     backgroundColor: Colors.grey,
     color: Colors.white,
     colorScheme: "cyan",
-    w: "28vh",
-    h: "28vh",
-    ml: "15vh"
+    marginBottom: "1vh",
+    w: "20vh",
+    h: "20vh",
   }
 };

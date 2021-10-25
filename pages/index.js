@@ -59,6 +59,7 @@ const styleProps = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    bgColor: Colors.white,
+    color: Colors.white,
+    bgColor: Colors.black,
   },
 };

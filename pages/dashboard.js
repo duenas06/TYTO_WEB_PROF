@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { Flex, Heading } from "@chakra-ui/layout";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, Wrap } from "react";
 import useWindowSize from "../src/CustomHooks/UseWindows";
 import Colors from "../src/Constants/Colors";
 import { Spacer } from "@chakra-ui/layout";
@@ -11,10 +11,20 @@ import UserDataContext from "../src/Context/UserDataContext";
 import Router from "next/router";
 import Head from "next/head";
 import NavigationBar from "../src/Components/dashboard/NavigationBar";
+import ClassSchedule from "../src/Components/ClassSchedule/ClassSchedule";
+import {useUtil} from "../src/Context/UserDataContext"
 export default function dashboard(props) {
   const getWindowSize = useWindowSize();
   const userDataContext = useContext(UserDataContext);
   const navLoginButtonContext = useContext(NavLoginButtonContext);
+  const [activityList, setActivityList] = useState([]);
+  const [utilDashboard, setUtilDashboard] = useUtil("");
+
+  // useEffect(() => {
+  //   if (!navLoginButtonContext.isLoggedIn) {
+  //     Router.push("/login");
+  //   }
+  // }, []);
 
   return (
     <>
@@ -24,13 +34,21 @@ export default function dashboard(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavigationBar />
-      <Flex flexDirection="row"  autoFocus {...styleProps.dashboardWrapper}>
+      <Flex flexDirection="row"
+      bgColor={Colors.black}
+      {...styleProps.dashboardWrapper}
+      height= "100%"
+      overflow= "auto"
+      maxHeight = "200vh"
+      position = "relative"
+      >
         {getWindowSize.width < 960 ? (
           <Heading>Mobile Devices are not supported</Heading>
         ) : (
           <>
              
             <Flex flexDirection="column">
+              <ClassSchedule/>
             </Flex>
           </>
         )}
@@ -45,7 +63,5 @@ const styleProps = {
     alignItems: "flex-start",
     justifyContent: "center",
     padding: "10",
-    bgColor: Colors.black,
-    h:"87.8vh",
   },
 };

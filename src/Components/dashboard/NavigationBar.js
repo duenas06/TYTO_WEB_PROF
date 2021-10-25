@@ -35,6 +35,6 @@ const styleProps = {
   navBarContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: "7",
+    padding: "2vh",
   },
 };

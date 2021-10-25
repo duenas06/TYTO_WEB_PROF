@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
-//import NavigationBar from "../src/Components/index/NavigationBar";
+import NavigationBar from "../src/Components/dashboard/NavigationBar";
 import { NavLoginButtonContextProvider } from "../src/Context/NavLogInButtonContext";
 import { UserDataContextProvider } from "../src/Context/UserDataContext";
 import { ClientProvider } from "../src/Context/ClientContext"
