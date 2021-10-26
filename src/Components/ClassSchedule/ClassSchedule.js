@@ -41,7 +41,10 @@ export default function ClassSchedule() {
             fontSize="20px"
             >To search efficiently, use the filter boxes below</Heading>
 
-            <Stack flexDirection = "row" alignItems = "center"justifyContent= "space-between" mt = "3vh" padding = "1"w= {getWindowSize.width * 0.4} backgroundColor= {Colors.black} >
+            <Stack flexDirection = "row" alignItems = "center"justifyContent= "space-between"
+             mt = "3vh" padding = "1"
+             w= {getWindowSize.width * 0.4} 
+             backgroundColor= {Colors.black} >
 
                 <Heading color={Colors.white}
                 textAlign = "center"

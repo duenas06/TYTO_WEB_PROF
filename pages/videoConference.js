@@ -5,7 +5,7 @@ import Head from "next/head";
 import Colors from "../src/Constants/Colors";
 import { useClient, useStart, useUsers, useAppID, useToken, useChannelName } from "../src/Context/ClientContext"
 import NavigationBar from "../src/Components/dashboard/NavigationBar"
-// import AgoraRTC from "agora-rtc-sdk-ng"
+import VideoCall from "../src/Components/VideoConference/VideoCall";
 
 export default function VideoConference() {
     const [channelName, setChannelName] = useChannelName();
@@ -13,8 +13,8 @@ export default function VideoConference() {
     const [token, setToken] = useToken();
     const setUsers = useUsers();
     const [start, setStart] = useStart();
-    const rtc = useClient()
     const getWindowSize = useWindowSize();
+    const [inCall, setInCall] = useState(false);
 
     const options = {
       // Pass your app ID here.
@@ -23,75 +23,18 @@ export default function VideoConference() {
       channel: "TYTO",
       // Pass a token of App Certificate.
       token: "006cd305ea814d54bdf87aa48ffe4af8363IAAo05ER+80pkZB5G4erPD1hL50gnXdpnbR1IXF8mLTHN4eW8j4AAAAAEACHtvL/euxzYQEAAQB17HNh",
+      // Set the user ID.
+      uid: 123456
     };
 
-
-    async function enterVideo() {
-
-    rtc.current.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-    enterClientEvent()
-    const uid = await rtc.current.client.join(appId, channelName, token, null);
-    // Create an audio track from the audio sampled by a microphone.
-    rtc.current.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-    // Create a video track from the video captured by a camera.
-    rtc.current.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-    //Adding a User to the Users State
-    setUsers((prevUsers) => {
-      return [...prevUsers, { uid: uid, audio: true, video: true, client: true, videoTrack: rtc.current.localVideoTrack }]
-    })
-    //Publishing your Streams
-    await rtc.current.client.publish([rtc.current.localAudioTrack, rtc.current.localVideoTrack]);
-    setStart(true)
-
+    let rtc = {
+        localAudioTrack: null,
+        localVideoTrack: null,
+        client: null
     };
-
-    async function enterClientEvent() {
-        rtc.current.client.on("user-published", async (user, mediaType) => {
-      // New User Enters
-      await rtc.current.client.subscribe(user, mediaType);
-
-      if (mediaType === "video") {
-        const remoteVideoTrack = user.videoTrack;
-        setUsers((prevUsers) => {
-          return [...prevUsers, { uid: user.uid, audio: user.hasAudio, video: user.hasVideo, client: false, videoTrack: remoteVideoTrack }]
-
-        })
-      }
-
-      if (mediaType === "audio") {
-        const remoteAudioTrack = user.audioTrack;
-        remoteAudioTrack.play();
-        setUsers((prevUsers) => {
-          return (prevUsers.map((User) => {
-            if (User.uid === user.uid) {
-              return { ...User, audio: user.hasAudio }
-            }
-            return User
-          }))
-
-        })
-      }
-    });
-
-    rtc.current.client.on("user-unpublished", (user, type) => {
-      //User Leaves
-      if (type === 'audio') {
-        setUsers(prevUsers => {
-          return (prevUsers.map((User) => {
-            if (User.uid === user.uid) {
-              return { ...User, audio: !User.audio }
-            }
-            return User
-          }))
-        })
-      }
-      if (type === 'video') {
-        setUsers((prevUsers) => {
-          return prevUsers.filter(User => User.uid !== user.uid)
-        })
-      }
-    });
-  }
+  
+    
+    
 
     return (
         <>
@@ -110,13 +53,24 @@ export default function VideoConference() {
           w={
             getWindowSize.width < 960
               ? getWindowSize.width * 0.7
-              : getWindowSize.width * 0.97
+              : getWindowSize.width * 0.978
           }
           h={getWindowSize.height < 960
             ? getWindowSize.height * 0.824
-            : getWindowSize.height * 1}
+            : getWindowSize.height * 0.808}
           {...styleProps.vidCardContainer}>
 
+          {inCall ? (
+          <VideoCall setInCall={setInCall} />
+          ) : (
+          <Button
+            variant="solid"
+            color="primary"
+            onClick={() => setInCall(true)}
+          >
+            Join Call
+          </Button>
+        )}
           </Wrap>
 
           {/* <Flex
@@ -153,13 +107,12 @@ const styleProps = {
         shadow: "lg",
       },
     vidCardContainer: {
-    flexDirection: "column",
     mt: "3vh",
-    bgColor: Colors.cyan,
+    bgColor: Colors.black,
     alignItems: "center",
     borderRadius: "lg",
-    shadow: "lg",
-    padding: "35",
+    padding: "1vh",
+    shadow: "lg"
   },
 
   chatCardContainer: {
